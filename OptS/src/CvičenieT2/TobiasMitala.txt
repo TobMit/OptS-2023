@@ -1,0 +1,75 @@
+    /**
+     * Príklad 1
+     *  Tento spôsb je náročnejší na čas ako príklad 2. keďže pre každého zákazníka prechádzam všetky sklady.
+     *  Zložitosť je O(m*n) kedže pre každého zákazníka prechádzam všetky sklady.
+     *
+     * @param m počet zákazníkov
+     * @param n počet slkadov (uzlov) a tých je 7
+     * @param y vektor umiestnení y=(0,1,0,1,1,0,0) m=7
+     * @param f vektor fixných nákladov
+     * @param b požiadavky zákazníkov
+     * @param d matica vzdialenosti medzi uzlami
+     * @return hodnotu účelovej funkcie
+     */
+    public int objUFLP_1(int m, int n, int[] y, int[] f, int[] b, int[][] d) {
+
+        int i, j;
+        int sum; // hodnota ucelovej funkcie
+        int mind; // premenná pre minimálnu vzdialenosť
+        int cand; // pomocná premenná pre vzdialenosť d[i][j]
+        sum = 0;
+        for (j = 0; j < m; j++) {  //pre každého zákazníka
+            mind = Integer.MAX_VALUE;
+            for (i = 0; i < n; i++) { // pre každý sklad
+                if (y[i] == 1) { // ak je sklad vybratý tak ho použijem na výpočet
+                    cand = d[i][j];
+                    mind = Math.min(mind, cand);
+                }
+            }
+            sum += mind * b[j]; // náklady sú dané súčinom vzdialenosti a požiadavky
+        }
+
+        for (i = 0; i < n; i++) {
+            sum += f[i] * y[i]; // pridám fixné náklady na vybraté sklady
+        }
+
+        return sum;
+    } // end of objUFLP_1
+
+
+    /**
+     * Príklad 2
+     *  Tento spôsb je meňej náročny na výpočet ako príklad 1. Za predpokladu že noy < počet všetkych možných skladov. Ak by bol rovný tak je to to isté.
+     *  Zložitosť je O(m*zy) kedže pre každého zákazníka neprechádzam všetky sklady ale len tie ktoré sú v zy.
+     *
+     * @param n počet kandidátov na umiestnenie skladov
+     * @param m počet zákazníkov
+     * @param noy dlžka pola zy
+     * @param zy vektor umiestnení skladov (uzlov) obsahuje indexi skladov napr {2, 4, 5}
+     * @param f vektor fixných nákladov
+     * @param b požiadavky zákazníkov
+     * @param d matica vzdialenosti medzi uzlami
+     * @return hodnotu účelovej funkcie
+     */
+    public int objUFLP_2(int n, int m, int noy, int[]zy, int[]f, int[]b, int[][]d){
+        int i, j; // indexi
+        int sum; // hodnota ucelovej funkcie
+        int mind; // pomocna premenná pre minimálnu vzdialenosť
+        int cand; // pomocna premenná pre vzdialenosť d[i][j]
+        sum=0;
+
+        for (j = 0; j < m; j++) {  //pre každého zákazníka
+            mind = Integer.MAX_VALUE;
+            for (i = 0; i < noy; i++) { // pre každý vybratý sklad
+                cand = d[zy[i]][j];
+                mind = Math.min(mind, cand);
+            }
+            sum += mind * b[j]; // náklady sú dané súčinom vzdialenosti a požiadavky
+        }
+
+        for (i = 0; i < noy; i++) {
+            sum += f[zy[i]]; // pridám fixné náklady
+        }
+
+        return sum;
+    } // end of objUFLP_2
